@@ -1,0 +1,116 @@
+.TH cocito 8 "13 October 2002" "Version 0.1" "Linux System Administration"
+.SH NAME
+cocito \- Linux intrusion detection system server
+.LP
+Thereby Cocytus wholly was congealed.
+            [Dante, Inferno, XXXIV, 52] 
+.SH SYNOPSIS
+.B cocito
+.RB [ " \-h " ]
+.RB [ " \-v " ]
+.RB [ " \-F " ]
+.RB [ " \-c "
+.I config file
+]
+.LP
+.B cocito_hup
+.LP
+.B cocito_testconf
+.LP
+.SH DESCRIPTION
+.B
+cocito
+is a stand alone daemon that monitors system statuses from clients.
+It open a specified tcp port and, by default, forks on background
+detaching himself from console that started it. Transactions with
+clients, running
+.B dite
+(see man
+.B dite
+(8) for more informations) are protected with RSA encryption
+from spoofing and similar. News, such as client shutting down or updating,
+or incorrect system status getting from a client, are sent to syslog. Please
+check
+.B syslog.conf
+(5)
+for more informations about
+.B syslogd
+daemon.
+.LP
+.B cocito_hup
+is a symlink to
+.B cocito
+binary to simplify your sending a
+.B SIGHUP
+to it while running.
+.LP
+.B cocito_testconf
+tests configuration file syntax
+.LP
+.SH OPTIONS
+.TP
+.BI "\-c " "config file"
+specify a configuration file for
+.B cocito
+to read, instead of default one
+.TP
+.B "\-v"
+enable verbose mode; this option is useless if "\-F" is not specified
+.TP
+.B "\-h"
+print help summary
+.TP
+.B "\-F"
+run
+.B cocito
+in foreground, instead of fork & detach mode
+.LP
+.SH SIGNALS
+.B cocito
+reacts to
+.B SIGHUP
+forcing configuration file parsing and restart
+.LP
+.SH CONFIGURATION FILE SYNTAX
+See configuration file example in your source directory
+.LP
+.SH FILES
+.TP
+/etc/cocito.conf
+.LP
+/var/run/cocito.pid
+.LP
+/var/log/cocito/*
+.PD
+.LP
+.SH BUGS
+Too many to discuss here
+.LP
+.SH SEE ALSO
+.B dite
+(8)
+.LP
+.SH AUTHORS
+Project is work-in-progress, feel free to contact authors if you encounter
+errors or catch bugs.
+.TP
+.PD 0
+.TP
+Mirko Bonasorte
+.TP
+student in Computer Science Engineering
+.TP
+Pisa University (Italy)
+.TP
+mirko.bonasorte@studenti.ing.unipi.it
+
+.TP
+Claudio Cicconetti
+.TP
+student in Computer Science Engineering
+.TP
+Pisa University (Italy)
+.TP
+cicconetti@virgilio.it
+.PD
+.zZ

@@ -1,0 +1,150 @@
+.TH dite 8 "13 October 2002" "Version 0.1" "Linux System Administration"
+.SH NAME
+dite \- Linux intrusion detection system client
+.LP
+.PD 0
+He from before me moved and made me stop,
+.LP
+Saying: Behold Dis, and behold the place
+.LP
+Where thou with fortitude must arm thyself
+.LP
+How frozen I became and powerless then,
+.LP
+Ask it not, Reader, for I write it not,
+.LP
+Because all language would be insufficient.
+            [Dante, Inferno, XXXIV, 19-24]
+.PD
+.SH SYNOPSIS
+.B dite
+.RB [ " \-h " ]
+.RB [ " \-v " ]
+.RB [ " \-F " ]
+.RB [ " \-c "
+.I config file
+]
+.LP
+.B dite_testconf
+.LP
+.B dite_quit
+.LP
+.B dite_update
+.LP
+.SH DESCRIPTION
+Dite is a stand alone daemon that periodically build a system status, based
+on
+.TP
+* TCP and UDP open ports
+.TP
+* kernel modules and version
+.TP
+* configuration file specified directory subtrees
+.LP
+and send it to one or more servers running
+.B cocito
+\.If a negative acknoledgment is returned, a message is logged via syslog
+(see man
+.B syslog.conf
+(5)
+for informations about
+.B syslogd
+daemon). In order to let
+.B dite
+\'s servers know that system is shutting down or that administrator is
+going to update critical system areas, to avoid unnecessary negative
+acknoledgements from
+.B cocito
+, you must send a
+.B SIGQUIT
+or
+.B SIGUPDATE
+to daemon running. This operations implies some informations sharing with
+servers, thus some amount of time should be accounted before
+.B dite
+shuts down.
+.LP
+Following are symlinks to
+.B dite
+binary that simplify administration tasks
+.LP
+.B dite_testconf
+tests configuration file syntax
+.LP
+.B dite_update
+send a
+.B SIGTERM
+to daemon if running
+.LP
+.B dite_quit
+send a
+.B SIGQUIT
+to daemon if running
+
+.SH OPTIONS
+.TP
+.BI "\-c " "config file"
+specify a configuration file for
+.B dite
+to read, instead of default one
+.TP
+.B "\-v"
+enable verbose mode; this option is useless if "\-F" is not specified
+.TP
+.B "\-h"
+print help summary
+.TP
+.B "\-F"
+run
+.B dite
+in foreground, instead of fork & detach mode
+.LP
+.SH SIGNALS
+.B dite
+reacts to
+.B SIGTERM
+and
+.B SIGQUIT
+allowing administrator to gracefully shutdown client on reboot/system update
+.LP
+.SH CONFIGURATION FILE SYNTAX
+See configuration file example in your source directory
+.LP
+.SH FILES
+.TP
+/etc/dite.conf
+.TP
+/var/run/dite.pid
+.PD
+.LP
+.SH BUGS
+Too many to discuss here
+.LP
+.SH SEE ALSO
+.B cocito
+(8)
+.LP
+.SH AUTHORS
+Project is work-in-progress, feel free to contact authors if you encounter
+errors or catch bugs.
+.TP
+.PD 0
+.TP
+Mirko Bonasorte
+.TP
+student in Computer Science Engineering
+.TP
+Pisa University (Italy)
+.TP
+mirko.bonasorte@studenti.ing.unipi.it
+
+.TP
+Claudio Cicconetti
+.TP
+student in Computer Science Engineering
+.TP
+Pisa University (Italy)
+.TP
+cicconetti@virgilio.it
+.PD
+.zZ

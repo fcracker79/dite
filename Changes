@@ -1,0 +1,10 @@
+2002/11/12      0.11-alpha released
+                Added some more verbosity
+                Added unpriv_port
+		
+2002/11/09      0.1-alpha released
+2002/11/06      Added server crash recovery for conf and eventually status
+                Moved public key and socket timeout into client descriptor
+					 
+2002/11/05      Added client/server pid file management.
+2002/11/03      Added Update management via SIGTERM on client.

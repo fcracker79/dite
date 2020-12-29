@@ -1,0 +1,120 @@
+Before you waste your time you have got to know:
+
+* this is a work in progress project => we do NOT assume any responsibility
+  for damage to your system, hardware, brain, pet dog.
+* we developed and tested ONLY under Linux 2.4.x; we do expect it to work
+  under Linux 2.2.x; we don't expect it to work on ANY other platform
+* there MAY be some memory leakage due to some spaghetti source code, which
+  we will hopefully change to something better in the future
+
+To compile, install, configure, run do following steps:
+
+(1) read carefully above lines
+(2) understand carefully above lines you just read
+(3) have a look to Makefile to meet your system requirements
+    NOTE: if you do not know what a Makefile is, quit now
+(4) type 'make', this SHOULD work
+(5) su to root and type 'make install'
+(6) create your own configuration files (sample configurations files
+    into source root directory) and copy them to /etc
+(7) make sure pid/conf directory (see step 3) exist
+(8) enjoy it (or leave it): go to following section to see some examples
+
+ADMINISTRATION EXAMPLES
+Please read carefully this examples, because there is not at the moment
+any other documentation explaining you how to use Dite.
+
+SCENARIO -1-
+You just want to try Dite environment. Copy dite.conf and cocito.conf from
+source root directory into /etc. If you've got no service running on tcp
+port 1001, you can safely do not touch them, elsewhere you should at least
+change port number to the unused one you like.
+Open two console as root, then run
+                cocito -F -v
+into the first terminal, and
+                dite -F -v
+into the second one (do NOT swap running order). You will see daemons
+statuses changing, as long as dite timeout expire.
+While runnning you can see what happens if something goes bad with your
+system, eg do one of the following operations:
+   (a) touch /bin/ps
+	(b) open a new service (eg. netcat -l -p 12345, if you've got netcat)
+When timeout expire dite builds new system status and send it to cocito,
+that detects status has changed. If you run
+                dite_update
+this tells cocito that system is now up to date, so it should not worry
+about differences between sent status and stored one.
+When you want to quit cocito run
+                cocito_quit
+and similarly dite
+                dite_quit
+
+Notice that cocito store dite system statuses even after it has quitted. So
+if you quit cocito and dite, then you make some significant modifications
+to your system, when you restart cocito and dite you will be adviced about
+something bad happening. To make things go right you must run dite_update.
+TIP: if want to make some test, it'd be better if you change
+                expire_time
+variable into dite.conf to some shorter value (30-60 sec) than default (600
+sec). The same for the 'check every' field into server command (15-30 sec).
+
+If cocito is running and you modify configuration file, to make it parse
+again it and restart you just run
+                cocito_update
+
+If you want to test dite.conf or cocito.conf just run
+                cocito_testconf
+                dite_testconf
+These will show you configuration based on current configuration files,
+placed into /etc.
+
+SCENARIO -2-
+You've got following network scenario:
+
+          +----------------+
+          |     host 1     |-----------+
+          |   192.168.0.1  |           |
+          +----------------+           |
+                                       |
+                               +----------------+
+                               |     host 2     |
+                               | 207.46.134.155 |
+                               +----------------+
+                                       | 
+                                       |
+                                       |
+         +----------------+         /\/\/\/\/\
+         |     host 3     |------ /            \
+         |   17.254.0.91  |      |   internet   |
+         +----------------+       \            / 
+                                    \/\/\/\/\/
+
+You can do such a configuration, after you installed Dite into each host,
+to protect servers (host 2, host 3) from intrusion.
+
+* host 1 *
+* cocito.conf *
+client     host2      207.46.134.155
+
+* host 2 *
+* cocito.conf *
+client     host3      17.254.0.91
+* dite.conf *
+server     host1      192.168.0.1      1001      300
+server     host3      17.254.0.91      1001      600
+
+* host 3 *
+* cocito.conf *
+client     host2      207.46.134.155
+* dite.conf   *
+server     host3      207.46.134.155   1001      600
+
+Thus host 1, that is not connected to internet, acts only like a detection
+unit (running cocito): he receives system status only from host 2.
+
+Host 2 sends his system status to host 1 (through local network) every 5
+minutes, and to host 3 (through internet) every 10 minutes. It acts also
+like a detection unit for host 3, that sends to it his system status every
+10 minutes through internet.
+
+(continues...)

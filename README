@@ -1,0 +1,24 @@
+Dite is a distributed intrusion detection system for
+Linux 2.4.x based architectures.
+
+It consists of two programs:
+
+(1) Dite
+    periodically gets the host system status (kernel & modules info,
+    tcp/udp offered services, CRC for specified directory subtrees)
+    and send it to Cocito, waiting for acknowledgement.
+
+(2) Cocito
+    receives host system status from Dite and compares it wih a previously
+    stored one. On comparison error, it generates a
+    syslog warning and replies to Dite with a negative acknowledgement.
+
+Source code written in C. Comments in english.
+Required libraries:
+	* crypto
+	* pthread
+	* zlib
+
+Please read manpages:
+
+	nroff man/* -man | more      /* from the source root directory */

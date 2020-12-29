@@ -1,0 +1,15 @@
+[OPT]  Cocito timeout.
+[OPT]  Add compression.
+[OPT]  *Real* error recovery on client/server configuration files parsing.
+[OPT]  Autoconf.
+[OPT]  CVS management.
+[IMP]  Any porting we can manage.
+[IMP]  *Real* gargabe collection.
+
+
+
+
+[CRT]: Critical
+[URG]: Urgent
+[OPT]: Optional
+[IMP]: Impossible
