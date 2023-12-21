@@ -52,7 +52,7 @@ int
 get_modulus (RSA * rsa, char **bin)
 {
    unsigned int size;
-   BIGNUM *n;
+   
 
    if (rsa == NULL)
       return -1;
@@ -60,7 +60,7 @@ get_modulus (RSA * rsa, char **bin)
       return -1;
 
    PRINTDEBUG ("Getting modulus.\n");
-   n = rsa->n;
+   const BIGNUM *n = RSA_get0_n(rsa);
 
    PRINTDEBUG ("Now get the size of the RSA number.\n");
    size = RSA_size (rsa);
@@ -79,15 +79,14 @@ int
 get_pub_exp (RSA * rsa, char **bin)
 {
    unsigned int size;
-   BIGNUM *e;
-
+   
    if (rsa == NULL)
       return -1;
    if (bin == NULL)
       return -1;
 
    PRINTDEBUG ("Getting modulus.\n");
-   e = rsa->e;
+   const BIGNUM *e = RSA_get0_e(rsa);
 
    PRINTDEBUG ("Now get the size of the RSA number.\n");
    size = RSA_size (rsa);
@@ -110,7 +109,6 @@ rebuild_pubkey (RSA ** rsa,
 {
 
    BIGNUM *n, *e;
-   RSA *r;
 
    if (rsa == NULL)
       return -1;
@@ -122,24 +120,16 @@ rebuild_pubkey (RSA ** rsa,
       return -1;
 
    *rsa = RSA_new ();
-   r = *rsa;
    n = BN_new ();
    e = BN_new ();
    BN_bin2bn (bin_mod, mod_size, n);
    BN_bin2bn (bin_exp, exp_size, e);
 
-   BN_clear_free (r->n);
-   BN_clear_free (r->e);
-   BN_clear_free (r->dmp1);
-   BN_clear_free (r->dmq1);
-   BN_clear_free (r->iqmp);
-   r->n = n;
-   r->e = e;
-   r->d = NULL;
-   r->p = NULL;
-   r->q = NULL;
-   r->dmp1 = NULL;
-   r->dmq1 = NULL;
-   r->iqmp = NULL;
+   // BN_clear_free (r->n);
+   // BN_clear_free (r->e);
+   // BN_clear_free (r->dmp1);
+   // BN_clear_free (r->dmq1);
+   // BN_clear_free (r->iqmp);
+   RSA_set0_key(*rsa, n, e, NULL);
    return 1;
 }

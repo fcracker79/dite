@@ -1,5 +1,7 @@
 #include "client.h"
 
+#include <openssl/sha.h>
+
 /* client_has_to_quit == QUIT_SHUTDOWN ==>  the client has not to be updated.
    client_has_to_quit == QUIT_UPDATE ==> the client may be updated. 
  */
@@ -659,7 +661,7 @@ client_thread (void *v)
    mod_size = get_modulus (rsa, &mod);
    exp_size = get_pub_exp (rsa, &exp);
    /* put packet type (configuration) into send buffer */
-   type = CONF;
+   type = PKT_CONF;
    memcpy (temp, &type, sizeof (type));
    temp += sizeof (type);
 
@@ -801,6 +803,7 @@ client_thread (void *v)
                   break;
                default:
                   /* For future developement. */
+				  ;
             }
          }
          else {
@@ -815,6 +818,7 @@ client_thread (void *v)
                   break;
                default:
                   /* For future developement. */
+				  ;
             }
          }
          close (desc->socket);

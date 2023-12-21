@@ -1,5 +1,7 @@
 #include "kernel.h"
 
+#include <linux/module.h>
+
 int
 getKernelStatus (void **data, unsigned int *size)
 {
@@ -55,12 +57,13 @@ getModuleStatus (module * buff, const char *modname)
    if (modname == NULL)
       return -1;
 
-/* Require some information on the specified module.
- */
-   if (query_module (modname, QM_INFO, &m, sizeof (struct module_info),
-		     (size_t *) & size)
-       == -1)
-      return -1;
+   /* Require some information on the specified module. */
+   // query_module removed in Linux 2.6
+   return -1;
+   // if (query_module (modname, 5, &m, sizeof (struct module_info),
+	// 	     (size_t *) & size)
+   //     == -1)
+   //    return -1;
 
    buff->length = strlen (modname);
    buff->name = (char *) Malloc (strlen (modname) + 1);
@@ -120,7 +123,9 @@ getLoadedModules (void **mod_array, unsigned int *l)
    request with an empty buffer. The function will returns an error and the
    requested size of the buffer.
  */
-   query_module (NULL, QM_MODULES, NULL, 0, &size);
+
+   // query_module removed in Linux 2.6
+   // query_module (NULL, QM_MODULES, NULL, 0, &size);
    buffer = (char *) Malloc (size);
 
 /* The kernel mantains the ENOSPC error, which was intentionally raised by the
@@ -128,7 +133,7 @@ getLoadedModules (void **mod_array, unsigned int *l)
  */
    errno = 0;
    temp = buffer;
-   query_module (NULL, QM_MODULES, buffer, size, &num);
+   // query_module (NULL, QM_MODULES, buffer, size, &num);
 
    mod_temp = (module *) Malloc (sizeof (module) * num);
 

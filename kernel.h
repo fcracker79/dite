@@ -1,5 +1,5 @@
 /*
-	Dite. Distributed linux intrusion detection system.
+        Dite. Distributed linux intrusion detection system.
    Copyright (C) 2002 Bonasorte M., Cicconetti C.
 
    This program is free software; you can redistribute it and/or
@@ -22,20 +22,25 @@
 #include "common.h"
 #include "comms.h"
 #include <sys/utsname.h>
-#include "linux/module.h"
 
-int query_module (const char *name, int which, void *buf, size_t bufsize,
-		  size_t * ret);
+struct module_info {
+  unsigned long address;
+  unsigned long size;
+  unsigned long flags;
+};
 
-int getModuleStatus (module * buff, const char *modname);
+int query_module(
+    const char* name, int which, void* buf, size_t bufsize, size_t* ret);
 
-int getLoadedModules (void **mod_array, unsigned int *l);
+int getModuleStatus(module* buff, const char* modname);
 
-int print_kernel_modules (void *buff, unsigned int l);
+int getLoadedModules(void** mod_array, unsigned int* l);
 
-int getKernelStatus (void **data, unsigned int *size);
+int print_kernel_modules(void* buff, unsigned int l);
 
-int print_kernel_status (void *data);
+int getKernelStatus(void** data, unsigned int* size);
+
+int print_kernel_status(void* data);
 
 #define __KERNEL__H
 #endif

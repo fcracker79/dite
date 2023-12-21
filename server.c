@@ -1,5 +1,8 @@
 #include "server.h"
 
+#include <openssl/md5.h>
+#include <openssl/sha.h>
+
 /**************************************************************/
 /*                     global variables                       */
 /**************************************************************/
@@ -619,19 +622,19 @@ server_thread (void *v)
 	      continue;
       }
 
-      /* If we get a CONF packet and we have already the configuration, there
+      /* If we get a PKT_CONF packet and we have already the configuration, there
          may be something wrong.
        */
-      if (desc->got_conf && type_buf == CONF) {
+      if (desc->got_conf && type_buf == PKT_CONF) {
 	    VERBOSE ("warning: waiting for packet, got conf")
 		 syslog (LOG_ALERT, "waiting for packet, got conf from %s", desc->nick);
 	    printlog ("got unrequested configuration", server_logfile_fd);
       }
 
-      /* However, if we have not the status or the packet is a CONF, we try to
+      /* However, if we have not the status or the packet is a PKT_CONF, we try to
          get it.
        */
-      if (!desc->got_conf || type_buf == CONF) {
+      if (!desc->got_conf || type_buf == PKT_CONF) {
 	 int x, y;
 
 	 desc->status = WAIT_FOR_CONF;
@@ -650,14 +653,14 @@ server_thread (void *v)
 
 	 MOREVERBOSE ("read %d bytes from %s", read_size, desc->nick)
 	    memcpy (&type, buffer, sizeof (type));
-	 if (type != CONF) {
-	    VERBOSE ("error: waiting type CONF, got %d on %s",
+	 if (type != PKT_CONF) {
+	    VERBOSE ("error: waiting type PKT_CONF, got %d on %s",
 		     type, desc->nick)
 	       close (desc->socket);
 	    continue;
 	 }
 
-	 MOREVERBOSE ("got CONF packet on %s", desc->nick)
+	 MOREVERBOSE ("got PKT_CONF packet on %s", desc->nick)
 	    p_buffer = buffer;
 
 	 /* skip type bytes */
@@ -710,7 +713,7 @@ server_thread (void *v)
 	 /* check for configuration packet length consistency */
 	 read_size += sizeof (type_buf);
 	 if (read_size < 0) {
-	    VERBOSE ("error: packet CONF too short on %s", desc->nick)
+	    VERBOSE ("error: packet PKT_CONF too short on %s", desc->nick)
 	       close (desc->socket);
 	    continue;
 	 }
@@ -769,7 +772,7 @@ server_thread (void *v)
 	    close (desc->socket);
 	    continue;
 	 }
-      } /*if (!desc->got_conf || type_buf == CONF) */
+      } /*if (!desc->got_conf || type_buf == PKT_CONF) */
       which_packet = 0;
 
       /* Here we have only the packet type on type_buf. It will be a tragedy.
@@ -836,6 +839,7 @@ server_thread (void *v)
 					 VERBOSE ("error sending Update ACK on %s", desc->nick);
 				 default:
 					 /* For future developement. */
+					 ;
 			 }
 			 
 			 error = S_WRITE_ERR;
@@ -858,6 +862,7 @@ server_thread (void *v)
 					 break;
 				 default:
 					 /* For future developement. */
+					 ;
 			 }
 		 }
 	    break;
